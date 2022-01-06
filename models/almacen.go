@@ -17,7 +17,10 @@ type Stock struct {
 func FilterStock(ID string) []byte {
 	var s Stock
 
-	conn := database.Connection()
+	conn, err := database.Connection()
+	if err != nil {
+		log.Print(err)
+	}
 	defer conn.Close()
 
 	query := "SELECT id, clave, valor FROM logic.almacenes WHERE id = ?"
@@ -31,8 +34,10 @@ func FilterStock(ID string) []byte {
 }
 
 func InsertStock(clave, valor string) {
-	conn := database.Connection()
-	defer conn.Close()
+	conn, err := database.Connection()
+	if err != nil {
+		log.Print(err)
+	}
 
 	result, err := conn.Exec(`INSERT INTO logic.almacenes (clave, valor) VALUES (?, ?);`, clave, valor)
 	if err != nil {
@@ -47,7 +52,10 @@ func InsertStock(clave, valor string) {
 }
 
 func SelectAllStock() []byte {
-	conn := database.Connection()
+	conn, err := database.Connection()
+	if err != nil {
+		log.Print(err)
+	}
 	defer conn.Close()
 
 	rows, err := conn.Query(`SELECT * FROM logic.almacenes`)
@@ -77,10 +85,13 @@ func SelectAllStock() []byte {
 }
 
 func DeleteStock(Num int) {
-	conn := database.Connection()
+	conn, err := database.Connection()
+	if err != nil {
+		log.Print(err)
+	}
 	defer conn.Close()
 
-	_, err := conn.Exec(`DELETE FROM logic.almacenes WHERE id = ?`, Num)
+	_, err = conn.Exec(`DELETE FROM logic.almacenes WHERE id = ?`, Num)
 	if err != nil {
 		log.Fatal(err)
 	}
